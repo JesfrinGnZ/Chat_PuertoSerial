@@ -18,7 +18,7 @@
 using namespace std;
 int serial_port;
 string mensaje;
-char read_buf [256];
+char read_buf [500];
 struct termios tty;
 
 
@@ -29,12 +29,16 @@ void foo()
 //  unsigned char msg[] = { 'H', 'e', 'l', 'l', 'o', '\r' };
 //  write(serial_port, "Hello, world!", sizeof(msg));
 
-
+    char msg[50];
     while(1){
-        printf("->Mensaje:\n");
-        getline(cin,mensaje);
-        const void * a = mensaje.c_str();
-        write(serial_port, a, sizeof(a));
+        cout<<"->Mensaje:";
+        cin.getline(msg,50);
+        write(serial_port, msg, sizeof(msg));
+
+        //cout<<"->Mensaje:";
+        //getline(cin,mensaje);
+        //const void * a = mensaje.c_str();
+        //write(serial_port, a, sizeof(a));
     }
 
  // close(serial_port);
@@ -53,7 +57,7 @@ void bar(int x)
 
 
  while(1){
-printf("\n");
+//printf("\n");
   // Normally you wouldn't do this memset() call, but since we will just receive
   // ASCII data for this example, we'll set everything to 0 so we can
   // call printf() easily.
@@ -74,6 +78,7 @@ printf("\n");
   if(num_bytes>0){
         //printf("Read %i bytes. Received message: %s", num_bytes, read_buf);
         cout<<"->MENSAJE RECIBIDO:"<<read_buf<<endl;
+        //cout<<"->Mensaje:";
   }
  //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -81,11 +86,16 @@ printf("\n");
 
 }
 
-int main() 
+int main(int argc, char *argv[]) 
 {
+   if(argc!=2){
+    printf("Faltan parametros(/dev/ttyS0 | /dev/ttyS1)\n");
+    return 0;
+    }
+
 //Configurando puerto
   // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
-serial_port = open("/dev/ttyS1", O_RDWR);
+serial_port = open(argv[1], O_RDWR);
 
   // Create new termios struc, we call it 'tty' for convention
 
