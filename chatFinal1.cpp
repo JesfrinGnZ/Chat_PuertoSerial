@@ -14,6 +14,12 @@
 #include <unistd.h> // write(), read(), close()
 #include <chrono>
 
+//Colores
+#define RESET   "\033[0m"
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+
 
 using namespace std;
 int serial_port;
@@ -31,7 +37,7 @@ void foo()
 
     char msg[50];
     while(1){
-        cout<<"->Mensaje:";
+        cout << GREEN << "->" <<std::endl;
         cin.getline(msg,50);
         write(serial_port, msg, sizeof(msg));
 
@@ -77,7 +83,7 @@ void bar(int x)
   // print it to the screen like this!)
   if(num_bytes>0){
         //printf("Read %i bytes. Received message: %s", num_bytes, read_buf);
-        cout<<"->MENSAJE RECIBIDO:"<<read_buf<<endl;
+        cout<<YELLOW<<"->MENSAJE RECIBIDO:"<<read_buf<<GREEN<<endl;
         //cout<<"->Mensaje:";
   }
  //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -93,6 +99,9 @@ int main(int argc, char *argv[])
     return 0;
     }
 
+    cout <<"\n"<<BOLDRED<<"CHAT POR PUERTOS 2.0, Digite su mensaje para comunicarse con otro puerto"<<endl;
+    cout <<GREEN<<"MENSAJE EMISOR:VERDE ---------------"<<YELLOW<<"-----------MENSAJE RECEPTOR:AMARILLO\n"<<RESET<<endl;
+
 //Configurando puerto
   // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
 serial_port = open(argv[1], O_RDWR);
@@ -102,6 +111,7 @@ serial_port = open(argv[1], O_RDWR);
   // Read in existing settings, and handle any error
   if(tcgetattr(serial_port, &tty) != 0) {
       printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
+      cout<<"INICIE LA COMUNICACION ENTRE PUERTOS CON SOCAT"<<endl;
   }
 
   tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
