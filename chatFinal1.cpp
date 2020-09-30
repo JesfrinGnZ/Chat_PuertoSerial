@@ -13,6 +13,7 @@
 #include <termios.h> // Contains POSIX terminal control definitions
 #include <unistd.h> // write(), read(), close()
 #include <chrono>
+#include <stdlib.h>
 
 //Colores
 #define RESET   "\033[0m"
@@ -26,6 +27,18 @@ int serial_port;
 string mensaje;
 char read_buf [500];
 struct termios tty;
+int contadorMensajes=0;
+int limiteDeMensajes=10;
+
+void contarMensajes(){
+    contadorMensajes++;
+    if(contadorMensajes==limiteDeMensajes){
+        system("clear");
+        cout <<"\n"<<BOLDRED<<"CHAT POR PUERTOS 2.0, Digite su mensaje para comunicarse con otro puerto"<<endl;
+        cout <<GREEN<<"MENSAJE EMISOR:VERDE ---------------"<<YELLOW<<"-----------MENSAJE RECEPTOR:AMARILLO\n"<<RESET<<endl;
+        contadorMensajes=0;
+    }
+}
 
 
 void foo() 
@@ -40,7 +53,7 @@ void foo()
         cout << GREEN << "->" <<std::endl;
         cin.getline(msg,50);
         write(serial_port, msg, sizeof(msg));
-
+        contarMensajes();
         //cout<<"->Mensaje:";
         //getline(cin,mensaje);
         //const void * a = mensaje.c_str();
@@ -84,6 +97,7 @@ void bar(int x)
   if(num_bytes>0){
         //printf("Read %i bytes. Received message: %s", num_bytes, read_buf);
         cout<<YELLOW<<"->MENSAJE RECIBIDO:"<<read_buf<<GREEN<<endl;
+        contarMensajes();
         //cout<<"->Mensaje:";
   }
  //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
